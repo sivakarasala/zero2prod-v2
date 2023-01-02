@@ -1,0 +1,52 @@
+alerts:
+  - rule: DEPLOYMENT_FAILED
+  - rule: DOMAIN_FAILED
+databases:
+  - engine: PG
+    name: newsletter
+    num_nodes: 1
+    size: db-s-dev-database
+    version: "12"
+name: zero2prod
+region: blr
+services:
+  - dockerfile_path: Dockerfile
+    envs:
+      - key: DATABASE_URL
+        scope: RUN_TIME
+        value: ${newsletter.DATABASE_URL}
+      - key: APP_DATABASE__USERNAME
+        scope: RUN_TIME
+        value: ${newsletter.USERNAME}
+      - key: APP_DATABASE__PASSWORD
+        scope: RUN_TIME
+        value: ${newsletter.PASSWORD}
+      - key: APP_DATABASE__HOST
+        scope: RUN_TIME
+        value: ${newsletter.HOSTNAME}
+      - key: APP_DATABASE__PORT
+        scope: RUN_TIME
+        value: ${newsletter.PORT}
+      - key: APP_DATABASE__DATABASE_NAME
+        scope: RUN_TIME
+        value: ${newsletter.DATABASE}
+    github:
+      branch: master
+      deploy_on_push: true
+      repo:
+        sivakarasala/zero2prod-v2
+        # Active probe used by DigitalOcean's to ensure our application is healthy
+    health_check:
+      # The path to our health check endpoint! It turned out to be useful in the end!
+      http_path: /health_check
+    # The port the application will be listening on for incoming requests
+    # It should match what we specify in our configuration.yaml file!
+    http_port: 8000
+    # For production workloads we'd go for at least two!
+    instance_count: 1
+    # Let's keep the bill lean for now...
+    instance_size_slug: basic-xxs
+    name: zero2prod
+    routes:
+      - path: /
+    source_dir: /
