@@ -12,6 +12,9 @@ region: blr
 services:
   - dockerfile_path: Dockerfile
     envs:
+      - key: APP_APPLICATION__BASE_URL
+        scope: RUN_TIME
+        value: ${APP_URL}
       - key: DATABASE_URL
         scope: RUN_TIME
         value: ${newsletter.DATABASE_URL}
