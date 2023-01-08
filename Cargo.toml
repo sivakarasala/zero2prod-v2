@@ -40,6 +40,8 @@ serde-aux = "3"
 unicode-segmentation = "1"
 validator = "0.14"
 rand = { version = "0.8", features=["std_rng"] }
+thiserror = "1"
+anyhow = "1"
 
 [dependencies.sqlx]
 version = "0.6"
